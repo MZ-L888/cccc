@@ -3,7 +3,7 @@
 """
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 
 from app.core.security import verify_auth_token
@@ -50,8 +50,11 @@ def setup_page_routes(app: FastAPI) -> None:
     """
 
     @app.get("/", response_class=HTMLResponse)
+    @app.head("/")
     async def auth_page(request: Request):
-        """认证页面"""
+        """认证页面，支持 GET 和 HEAD 请求"""
+        if request.method == "HEAD":
+            return Response(status_code=200)
         return templates.TemplateResponse("auth.html", {"request": request})
 
     @app.post("/auth")
@@ -153,10 +156,11 @@ def setup_health_routes(app: FastAPI) -> None:
     """
 
     @app.get("/health")
+    @app.head("/health")
     async def health_check(request: Request):
-        """健康检查端点"""
-        logger.info("Health check endpoint called")
-        return {"status": "healthy"}
+        """健康检查端点，支持 GET 和 HEAD 请求"""
+        logger.info(f"Health check endpoint called with {request.method}")
+        return {"status": "healthy", "timestamp": "2025-07-16"}
 
 
 def setup_api_stats_routes(app: FastAPI) -> None:

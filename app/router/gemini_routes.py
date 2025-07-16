@@ -322,24 +322,31 @@ async def verify_key(api_key: str, chat_service: GeminiChatService = Depends(get
     logger.info("Verifying API key validity")
     
     try:
-        gemini_request = GeminiRequest(
-            contents=[
-                GeminiContent(
-                    role="user",
-                    parts=[{"text": "hi"}],
-                )
-            ],
-            generation_config={"temperature": 0.7, "top_p": 1.0, "max_output_tokens": 10}
-        )
-        
-        response = await chat_service.generate_content(
-            settings.TEST_MODEL,
-            gemini_request,
-            api_key
-        )
-        
-        if response:
-            return JSONResponse({"status": "valid"})        
+        # 直接调用 API 进行简单验证
+        import httpx
+
+        url = f"{settings.BASE_URL}/models/{settings.TEST_MODEL}:generateContent"
+        headers = {"Content-Type": "application/json"}
+        params = {"key": api_key}
+
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [{"text": "test"}]
+                }
+            ]
+        }
+
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(url, json=payload, headers=headers, params=params)
+
+        if response.status_code == 200:
+            logger.info(f"Key verification successful for: {api_key}")
+            return JSONResponse({"status": "valid"})
+        else:
+            logger.error(f"Key verification failed with status: {response.status_code}")
+            raise Exception(f"API returned status {response.status_code}")
     except Exception as e:
         logger.error(f"Key verification failed: {str(e)}")
         
@@ -372,15 +379,27 @@ async def verify_selected_keys(
         """内部函数，用于验证单个密钥并处理异常"""
         nonlocal successful_keys, failed_keys
         try:
-            gemini_request = GeminiRequest(
-                contents=[GeminiContent(role="user", parts=[{"text": "hi"}])],
-                generation_config={"temperature": 0.7, "top_p": 1.0, "max_output_tokens": 10}
-            )
-            await chat_service.generate_content(
-                settings.TEST_MODEL,
-                gemini_request,
-                api_key
-            )
+            # 直接调用 API 进行验证
+            import httpx
+
+            url = f"{settings.BASE_URL}/models/{settings.TEST_MODEL}:generateContent"
+            headers = {"Content-Type": "application/json"}
+            params = {"key": api_key}
+
+            payload = {
+                "contents": [
+                    {
+                        "role": "user",
+                        "parts": [{"text": "test"}]
+                    }
+                ]
+            }
+
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(url, json=payload, headers=headers, params=params)
+
+            if response.status_code != 200:
+                raise Exception(f"API returned status {response.status_code}")
             successful_keys.append(api_key)
             return api_key, "valid", None
         except Exception as e:

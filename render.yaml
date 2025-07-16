@@ -13,11 +13,11 @@ services:
       - key: SQLITE_DATABASE
         value: gemini_balance
       - key: API_KEYS
-        value: '["your-gemini-api-key-here"]'
+        value: '["REPLACE_WITH_YOUR_GEMINI_API_KEY"]'
       - key: ALLOWED_TOKENS
-        value: '["your-access-token-here"]'
+        value: '["REPLACE_WITH_YOUR_ACCESS_TOKEN"]'
       - key: AUTH_TOKEN
-        value: your-auth-token-here
+        value: REPLACE_WITH_YOUR_AUTH_TOKEN
       - key: BASE_URL
         value: https://generativelanguage.googleapis.com/v1beta
       - key: TEST_MODEL
