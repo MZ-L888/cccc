@@ -51,10 +51,14 @@ def setup_page_routes(app: FastAPI) -> None:
 
     @app.get("/", response_class=HTMLResponse)
     @app.head("/")
+    @app.post("/")
     async def auth_page(request: Request):
-        """认证页面，支持 GET 和 HEAD 请求"""
+        """认证页面，支持 GET、HEAD 和 POST 请求"""
         if request.method == "HEAD":
             return Response(status_code=200)
+        elif request.method == "POST":
+            # 如果有人直接 POST 到主页，重定向到认证处理
+            return RedirectResponse(url="/auth", status_code=307)
         return templates.TemplateResponse("auth.html", {"request": request})
 
     @app.post("/auth")
@@ -161,6 +165,40 @@ def setup_health_routes(app: FastAPI) -> None:
         """健康检查端点，支持 GET 和 HEAD 请求"""
         logger.info(f"Health check endpoint called with {request.method}")
         return {"status": "healthy", "timestamp": "2025-07-16"}
+
+    @app.get("/providers")
+    async def get_providers():
+        """返回支持的提供商信息"""
+        return {
+            "providers": [
+                {
+                    "id": "openai",
+                    "name": "OpenAI Compatible",
+                    "base_url": "/v1",
+                    "supported": True
+                },
+                {
+                    "id": "gemini",
+                    "name": "Google Gemini",
+                    "base_url": "/v1",
+                    "supported": True
+                }
+            ],
+            "default_provider": "openai",
+            "api_version": "v1"
+        }
+
+    @app.get("/api/providers/gemini")
+    async def gemini_provider_info():
+        """Gemini 提供商信息"""
+        return {
+            "provider": "gemini",
+            "name": "Google Gemini",
+            "status": "available",
+            "models": ["gemini-2.5-pro", "gemini-2.0-flash-exp"],
+            "base_url": "/v1",
+            "compatible_with": "openai"
+        }
 
 
 def setup_api_stats_routes(app: FastAPI) -> None:
