@@ -1,26 +1,26 @@
 #!/bin/bash
 
-# Render 构建脚本
-echo "🚀 开始构建 Gemini Balance 应用..."
+# Render build script
+echo "Starting Gemini Balance build..."
 
-# 设置 Python 版本
-echo "📋 使用 Python 版本: $(python --version)"
+# Check Python version
+echo "Using Python version: $(python --version)"
 
-# 升级 pip
-echo "⬆️ 升级 pip..."
+# Upgrade pip
+echo "Upgrading pip..."
 pip install --upgrade pip
 
-# 安装依赖
-echo "📦 安装 Python 依赖..."
+# Install dependencies
+echo "Installing Python dependencies..."
 pip install -r requirements.txt
 
-# 运行初始化脚本
-echo "🔧 运行环境初始化..."
+# Run initialization script
+echo "Running environment initialization..."
 python init_render.py
 
-# 设置权限
-echo "🔐 设置文件权限..."
+# Set permissions
+echo "Setting file permissions..."
 chmod +x app/main.py
 chmod +x start.sh
 
-echo "✅ 构建完成！"
+echo "Build completed successfully!"

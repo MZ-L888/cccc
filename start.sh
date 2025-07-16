@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Render 启动脚本
-echo "启动 Gemini Balance 应用..."
+# Render startup script
+echo "Starting Gemini Balance application..."
 
-# 设置环境变量
+# Set environment variables
 export PORT=${PORT:-8000}
 
-# 确保数据目录存在
+# Ensure data directories exist
 mkdir -p data
 mkdir -p logs
 
-# 启动应用
-echo "在端口 $PORT 上启动应用..."
+# Start application
+echo "Starting application on port $PORT..."
 exec uvicorn app.main:app --host 0.0.0.0 --port $PORT --no-access-log
