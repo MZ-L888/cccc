@@ -3,7 +3,7 @@ services:
     name: gemini-balance
     env: python
     buildCommand: chmod +x build.sh && ./build.sh
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    startCommand: python run.py
     plan: free
     healthCheckPath: /health
     envVars:
