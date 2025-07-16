@@ -2,9 +2,10 @@ services:
   - type: web
     name: gemini-balance
     env: python
+    region: oregon
+    plan: free
     buildCommand: chmod +x build.sh && ./build.sh
     startCommand: python run.py
-    plan: free
     healthCheckPath: /health
     envVars:
       - key: DATABASE_TYPE

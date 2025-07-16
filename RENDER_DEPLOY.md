@@ -21,7 +21,7 @@
    Name: gemini-balance
    Environment: Python 3
    Build Command: chmod +x build.sh && ./build.sh
-   Start Command: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+   Start Command: python run.py
    ```
 
 ### 方法二：使用 render.yaml 自动部署
