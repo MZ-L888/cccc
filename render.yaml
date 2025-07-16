@@ -1,0 +1,73 @@
+services:
+  - type: web
+    name: gemini-balance
+    env: python
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_TYPE
+        value: sqlite
+      - key: SQLITE_DATABASE
+        value: ./data/gemini_balance.db
+      - key: API_KEYS
+        value: '["your-gemini-api-key-here"]'
+      - key: ALLOWED_TOKENS
+        value: '["your-access-token-here"]'
+      - key: AUTH_TOKEN
+        value: your-auth-token-here
+      - key: BASE_URL
+        value: https://generativelanguage.googleapis.com/v1beta
+      - key: TEST_MODEL
+        value: gemini-1.5-flash
+      - key: IMAGE_MODELS
+        value: '["gemini-2.0-flash-exp", "gemini-2.5-pro"]'
+      - key: SEARCH_MODELS
+        value: '["gemini-2.0-flash-exp", "gemini-2.5-pro"]'
+      - key: THINKING_MODELS
+        value: '["gemini-2.5-pro"]'
+      - key: FILTERED_MODELS
+        value: '[]'
+      - key: TOOLS_CODE_EXECUTION_ENABLED
+        value: false
+      - key: SHOW_SEARCH_LINK
+        value: true
+      - key: SHOW_THINKING_PROCESS
+        value: true
+      - key: URL_NORMALIZATION_ENABLED
+        value: false
+      - key: MAX_FAILURES
+        value: 3
+      - key: MAX_RETRIES
+        value: 3
+      - key: CHECK_INTERVAL_HOURS
+        value: 1
+      - key: TIMEZONE
+        value: Asia/Shanghai
+      - key: TIME_OUT
+        value: 300
+      - key: LOG_LEVEL
+        value: INFO
+      - key: AUTO_DELETE_ERROR_LOGS_ENABLED
+        value: true
+      - key: AUTO_DELETE_ERROR_LOGS_DAYS
+        value: 7
+      - key: AUTO_DELETE_REQUEST_LOGS_ENABLED
+        value: false
+      - key: AUTO_DELETE_REQUEST_LOGS_DAYS
+        value: 30
+      - key: STREAM_OPTIMIZER_ENABLED
+        value: false
+      - key: FAKE_STREAM_ENABLED
+        value: false
+      - key: TTS_MODEL
+        value: gemini-2.5-flash-preview-tts
+      - key: TTS_VOICE_NAME
+        value: Zephyr
+      - key: TTS_SPEED
+        value: normal
+      - key: CREATE_IMAGE_MODEL
+        value: imagen-3.0-generate-002
+      - key: UPLOAD_PROVIDER
+        value: smms
