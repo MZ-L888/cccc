@@ -18,8 +18,17 @@ def create_directories():
     ]
 
     for directory in directories:
-        Path(directory).mkdir(parents=True, exist_ok=True)
-        print(f"✓ Created directory: {directory}")
+        dir_path = Path(directory)
+        dir_path.mkdir(parents=True, exist_ok=True)
+
+        # Set permissions for data directory
+        if directory == "data":
+            import stat
+            dir_path.chmod(stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+
+        print(f"✓ Created directory: {dir_path.absolute()}")
+        print(f"  - Exists: {dir_path.exists()}")
+        print(f"  - Writable: {os.access(dir_path, os.W_OK)}")
 
 def check_environment():
     """Check environment variables"""

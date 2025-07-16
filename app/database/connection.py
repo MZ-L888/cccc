@@ -14,11 +14,23 @@ logger = get_database_logger()
 
 # 数据库URL
 if settings.DATABASE_TYPE == "sqlite":
-    # 确保 data 目录存在
-    data_dir = Path("data")
-    data_dir.mkdir(exist_ok=True)
-    db_path = data_dir / settings.SQLITE_DATABASE
-    DATABASE_URL = f"sqlite:///{db_path}"
+    # 确保 data 目录存在，使用绝对路径
+    import os
+    current_dir = Path(os.getcwd())
+    data_dir = current_dir / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    # 确保数据库文件名有 .db 扩展名
+    db_filename = settings.SQLITE_DATABASE
+    if not db_filename.endswith('.db'):
+        db_filename += '.db'
+
+    db_path = data_dir / db_filename
+    DATABASE_URL = f"sqlite:///{db_path.absolute()}"
+
+    logger.info(f"SQLite database path: {db_path.absolute()}")
+    logger.info(f"Data directory exists: {data_dir.exists()}")
+    logger.info(f"Data directory writable: {os.access(data_dir, os.W_OK)}")
 elif settings.DATABASE_TYPE == "mysql":
     if settings.MYSQL_SOCKET:
         DATABASE_URL = f"mysql+pymysql://{settings.MYSQL_USER}:{quote_plus(settings.MYSQL_PASSWORD)}@/{settings.MYSQL_DATABASE}?unix_socket={settings.MYSQL_SOCKET}"

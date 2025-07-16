@@ -18,6 +18,10 @@ pip install -r requirements.txt
 echo "Running environment initialization..."
 python init_render.py
 
+# Test database setup
+echo "Testing database setup..."
+python test_db.py
+
 # Set permissions
 echo "Setting file permissions..."
 chmod +x app/main.py
